@@ -4,7 +4,7 @@
 
 This project aims to develop a decentralized car sharing system utilizing blockchain technology. By leveraging Hyperledger Fabric, the system ensures secure, transparent, and efficient transactions between car owners and users.
 
-Other participant : [GiorgioSaldana](https://github.com/giorgiosld) and Marta Musso
+Other participant : [Giorgio Saldana](https://github.com/giorgiosld) and [Marta Musso](https://github.com/turtulin)
 
 ## Key Features: 🔑
 
