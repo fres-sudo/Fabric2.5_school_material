@@ -45,9 +45,9 @@ async function newGrpcConnection(organization) {
     const tlsCredentials = grpc.credentials.createSsl(tlsRootCert);
 
     //Complete the gRCP Client connection here 
-    return new grpc.Client(...
-        { 'grpc.ssl_target_name_override': peerHostAlias }
-    );
+    return new grpc.Client(peerEndpoints[organization], tlsCredentials, {
+        'grpc.ssl_target_name_override': peerHostAlias,
+    });
 }
 
 /**
@@ -60,8 +60,8 @@ function newIdentity(organization) {
     const certPath = path.join(cryptoPath, `${organization}/users/User1@${organization}/msp/signcerts/User1@${organization}-cert.pem`)
     const mspId = orgMspIds[organization];
     //Retrieve and return credentials here ...
-    // const credentials ... 
-    // return {...}
+    const credentials = fs.readFileSync(certPath);
+    return { mspId, credentials }
 }
 
 /**
@@ -78,7 +78,7 @@ function newSigner(organization) {
     const privateKeyPem = fs.readFileSync(keyPath)
     const privateKey = crypto.createPrivateKey(privateKeyPem)
     //Create and return the signing implementation here
-    // ...
+    return signers.newPrivateKeySigner(privateKey)
 }
 
 /**
@@ -95,22 +95,19 @@ async function submitT(organization, channel, chaincode, transactionName, transa
     organization = organization.toLowerCase()
 
     console.log("\nCreating gRPC connection...")
-    //Establish gRPC connection here
-    // const client = ...
+    const client = await newGrpcConnection(organization)
 
     console.log(`Retrieving identity for User1 of ${organization} ...`)
-    //Retrieve User1's identity here
-    // const id = ...
-
-    //Retrieve signing implementation here
-    //  const signer = ...
+    //Retrieve User1's identity
+    const id = newIdentity(organization)
+    //Retrieve signing implementation
+    const signer = newSigner(organization)
 
     //Complete the gateway connection here ...
     const gateway = connect({
-        //...,
-        //...,
-        //...,
-
+        client,
+        identity: id,
+        signer: signer,
         // Default timeouts for different gRPC calls
         evaluateOptions: () => {
             return { deadline: Date.now() + 5000 }; // 5 seconds
@@ -129,20 +126,20 @@ async function submitT(organization, channel, chaincode, transactionName, transa
     try {
         console.log(`Connecting to ${channel} ...`)
         //Retrieve the channel here
-        //const network = ...
+        const network = gateway.getNetwork(channel)
 
         console.log(`Getting the ${chaincode} contract ...`)
         //Retrieve the contract here
-        //const contract = ...
+        const contract = network.getContract(chaincode)
 
         console.log(`Submitting ${transactionName} transaction ...\n`)
 
         //Submit transaction here
         let resp = null
         if (!transactionParams || transactionParams === '') {
-            //resp = ...
+            resp = await contract.submitTransaction(transactionName)
         } else {
-            //resp = ...
+            resp = await contract.submitTransaction(transactionName, ...transactionParams)
         }
         const resultJson = utf8Decoder.decode(resp);
 
@@ -151,16 +148,16 @@ async function submitT(organization, channel, chaincode, transactionName, transa
             console.log('*** Result:', result);
         }
         console.log('*** Transaction committed successfully');
-
+        return JSON.parse(resultJson)
 
         //Retrieve chaincode events here ...
-        //const events = ...
+        const events = await network.getChaincodeEvents(chaincode, { startBlock: BigInt(0) });
         try {
             for await (const event of events) {
                 const asset = new TextDecoder().decode(event.payload);
 
                 console.log(`*** Contract Event Received: ${event.eventName}`)
-                console.log(`-- asset: ${asset}`)
+                console.log(`-- trip: ${asset}`)
                 console.log(`-- chaincodeName: ${event.chaincodeName}`)
                 console.log(`-- transactionId: ${event.transactionId}`)
                 console.log(`-- blockNumber: ${event.blockNumber}\n`)
@@ -194,4 +191,284 @@ function submit(organization, channel, chaincode, transactionName, transactionPa
     }
 }
 
-module.exports = { submitT, submit }
+async function getAllTrip(organization, channel, chaincode, transactionName, transactionParams) {
+
+    organization = organization.toLowerCase()
+
+    console.log("\nCreating gRPC connection...")
+    const client = await newGrpcConnection(organization)
+
+    console.log(`Retrieving identity for User1 of ${organization} ...`)
+    //Retrieve User1's identity
+    const id = newIdentity(organization)
+    //Retrieve signing implementation
+    const signer = newSigner(organization)
+
+    //Complete the gateway connection here ...
+    const gateway = connect({
+        client,
+        identity: id,
+        signer: signer,
+        // Default timeouts for different gRPC calls
+        evaluateOptions: () => {
+            return { deadline: Date.now() + 5000 }; // 5 seconds
+        },
+        endorseOptions: () => {
+            return { deadline: Date.now() + 15000 }; // 15 seconds
+        },
+        submitOptions: () => {
+            return { deadline: Date.now() + 5000 }; // 5 seconds
+        },
+        commitStatusOptions: () => {
+            return { deadline: Date.now() + 60000 }; // 1 minute
+        },
+    })
+
+    try {
+        console.log(`Connecting to ${channel} ...`)
+        //Retrieve the channel here
+        const network = gateway.getNetwork(channel)
+
+        console.log(`Getting the ${chaincode} contract ...`)
+        //Retrieve the contract here
+        const contract = network.getContract(chaincode)
+
+        console.log(`Submitting ${transactionName} transaction ...\n`)
+
+        //Submit transaction here
+        let resp = null
+        if (!transactionParams || transactionParams === '') {
+            resp = await contract.evaluateTransaction(transactionName)
+        } else {
+            resp = await contract.evaluateTransaction(transactionName, ...transactionParams)
+        }
+        const resultJson = utf8Decoder.decode(resp);
+
+        if (resultJson && resultJson !== null) {
+            const result = JSON.parse(resultJson);
+            console.log('*** Result:', result);
+        }
+        console.log('*** Transaction committed successfully');
+        return JSON.parse(resultJson)
+    } catch (err) {
+        console.error(err)
+    } finally {
+        gateway.close()
+        client.close()
+    }
+
+}
+
+function get(organization, channel, chaincode, transactionName) {
+    if (!organization) {
+        console.log("organization argument missing!")
+    }
+    else if (!channel) {
+        console.log("channel argument missing!")
+    }
+    else if (!chaincode) {
+        console.log("chaincode argument missing!")
+    }
+    else if (!transactionName) {
+        console.log("transactionName argument missing!")
+    } else {
+        getAllTrip(organization, channel, chaincode, transactionName)
+    }
+}
+
+async function bookTrip(organization, channel, chaincode, transactionName, transactionParams){
+    organization = organization.toLowerCase()
+
+    console.log("\nCreating gRPC connection...")
+    const client = await newGrpcConnection(organization)
+
+    console.log(`Retrieving identity for User1 of ${organization} ...`)
+    //Retrieve User1's identity
+    const id = newIdentity(organization)
+    //Retrieve signing implementation
+    const signer = newSigner(organization)
+
+    //Complete the gateway connection here ...
+    const gateway = connect({
+        client,
+        identity: id,
+        signer: signer,
+        // Default timeouts for different gRPC calls
+        evaluateOptions: () => {
+            return { deadline: Date.now() + 5000 }; // 5 seconds
+        },
+        endorseOptions: () => {
+            return { deadline: Date.now() + 15000 }; // 15 seconds
+        },
+        submitOptions: () => {
+            return { deadline: Date.now() + 5000 }; // 5 seconds
+        },
+        commitStatusOptions: () => {
+            return { deadline: Date.now() + 60000 }; // 1 minute
+        },
+    })
+
+    try {
+        console.log(`Connecting to ${channel} ...`)
+        //Retrieve the channel here
+        const network = gateway.getNetwork(channel)
+
+        console.log(`Getting the ${chaincode} contract ...`)
+        //Retrieve the contract here
+        const contract = network.getContract(chaincode)
+
+        console.log(`Submitting ${transactionName} transaction ...\n`)
+
+        //Submit transaction here
+        let resp = null
+        if (!transactionParams || transactionParams === '') {
+            resp = await contract.submitTransaction(transactionName)
+        } else {
+            resp = await contract.submitTransaction(transactionName, ...transactionParams)
+        }        const resultJson = utf8Decoder.decode(resp);
+
+        if (resultJson && resultJson !== null) {
+            const result = JSON.parse(resultJson);
+            console.log('*** Result:', result);
+        }
+        console.log('*** Transaction committed successfully');
+
+
+        //Retrieve chaincode events here ...
+        const events = await network.getChaincodeEvents(chaincode, { startBlock: BigInt(0) });
+        try {
+            for await (const event of events) {
+                const asset = new TextDecoder().decode(event.payload);
+
+                console.log(`*** Contract Event Received: ${event.eventName}`)
+                console.log(`-- asset: ${asset}`)
+                console.log(`-- chaincodeName: ${event.chaincodeName}`)
+                console.log(`-- transactionId: ${event.transactionId}`)
+                console.log(`-- blockNumber: ${event.blockNumber}\n`)
+            }
+        } finally {
+            events.close();
+        }
+    } catch (err) {
+        console.error(err)
+    } finally {
+        gateway.close()
+        client.close()
+    }
+}
+
+function book(organization, channel, chaincode, transactionName, transactionParams) {
+    if (!organization) {
+        console.log("organization argument missing!")
+    }
+    else if (!channel) {
+        console.log("channel argument missing!")
+    }
+    else if (!chaincode) {
+        console.log("chaincode argument missing!")
+    }
+    else if (!transactionName) {
+        console.log("transactionName argument missing!")
+    } else {
+        bookTrip(organization, channel, chaincode, transactionName, transactionParams)
+    }
+}
+
+async function deleteTrip(organization, channel, chaincode, transactionName, transactionParams) {
+
+    organization = organization.toLowerCase()
+
+    console.log("\nCreating gRPC connection...")
+    const client = await newGrpcConnection(organization)
+
+    console.log(`Retrieving identity for User1 of ${organization} ...`)
+    //Retrieve User1's identity
+    const id = newIdentity(organization)
+    //Retrieve signing implementation
+    const signer = newSigner(organization)
+
+    //Complete the gateway connection here ...
+    const gateway = connect({
+        client,
+        identity: id,
+        signer: signer,
+        // Default timeouts for different gRPC calls
+        evaluateOptions: () => {
+            return { deadline: Date.now() + 5000 }; // 5 seconds
+        },
+        endorseOptions: () => {
+            return { deadline: Date.now() + 15000 }; // 15 seconds
+        },
+        submitOptions: () => {
+            return { deadline: Date.now() + 5000 }; // 5 seconds
+        },
+        commitStatusOptions: () => {
+            return { deadline: Date.now() + 60000 }; // 1 minute
+        },
+    })
+
+    try {
+        console.log(`Connecting to ${channel} ...`)
+        //Retrieve the channel here
+        const network = gateway.getNetwork(channel)
+
+        console.log(`Getting the ${chaincode} contract ...`)
+        //Retrieve the contract here
+        const contract = network.getContract(chaincode)
+
+        console.log(`Submitting ${transactionName} transaction ...\n`)
+
+        //Submit transaction here
+        let resp = await contract.submitTransaction(transactionName)
+        const resultJson = utf8Decoder.decode(resp);
+
+        if (resultJson && resultJson !== null) {
+            const result = JSON.parse(resultJson);
+            console.log('*** Result:', result);
+        }
+        console.log('*** Transaction committed successfully');
+
+
+        //Retrieve chaincode events here ...
+        const events = await network.getChaincodeEvents(chaincode, { startBlock: BigInt(0) });
+        try {
+            for await (const event of events) {
+                const asset = new TextDecoder().decode(event.payload);
+
+                console.log(`*** Contract Event Received: ${event.eventName}`)
+                console.log(`-- asset: ${asset}`)
+                console.log(`-- chaincodeName: ${event.chaincodeName}`)
+                console.log(`-- transactionId: ${event.transactionId}`)
+                console.log(`-- blockNumber: ${event.blockNumber}\n`)
+            }
+        } finally {
+            events.close();
+        }
+    } catch (err) {
+        console.error(err)
+    } finally {
+        gateway.close()
+        client.close()
+    }
+
+}
+
+function deleteT(organization, channel, chaincode, transactionName, transactionParams) {
+    if (!organization) {
+        console.log("organization argument missing!")
+    }
+    else if (!channel) {
+        console.log("channel argument missing!")
+    }
+    else if (!chaincode) {
+        console.log("chaincode argument missing!")
+    }
+    else if (!transactionName) {
+        console.log("transactionName argument missing!")
+    } else {
+        deleteTrip(organization, channel, chaincode, transactionName)
+    }
+}
+
+
+module.exports = { submitT, submit, getAllTrip, get, bookTrip, book, deleteTrip, deleteT }

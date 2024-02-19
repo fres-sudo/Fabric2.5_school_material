@@ -2,121 +2,493 @@
 <html lang="en">
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="Car Sharing system powered by Hyperledger Fabric" content="" />
+    <meta name="author" content="" />
     <title>Fabric Winter School</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css">
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+    <!-- Icons-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <!-- Google fonts-->
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,600;1,600&amp;display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,300;0,500;0,600;0,700;1,300;1,500;1,600;1,700&amp;display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,400;1,400&amp;display=swap" rel="stylesheet" />
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="style.css" rel="stylesheet" />
+    <style>
+</style>
+
+
 </head>
 
-<body>
-    <div class="container">
-        <form action="" class="m-auto" style="max-width:600px">
-            <h3 class="my-4">Asset Transfer App</h3>
-            <hr class="my-4" />
-            <h5 class="my-4">Identity</h5>
-
-            <div class="form-group mb-3 row"><label for="organization" class="col-md-5 col-form-label">User1 of
-                    Organization</label>
-                <div class="col-md-7">
-                    <input type="text" class="form-control form-control-lg" id="organization"
-                        value="agency.quotation.com" required>
+<body id="page-top">
+        <!-- Navigation-->
+        <nav class="navbar navbar-expand-lg navbar-light fixed-top shadow-sm" id="mainNav">
+            <div class="container px-5">
+                <a class="navbar-brand fw-bold" href="#page-top">Car Sharing</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                    Menu
+                    <i class="bi-list"></i>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarResponsive">
+                    <ul class="navbar-nav ms-auto me-4 my-3 my-lg-0">
+                        <li class="nav-item"><a class="nav-link me-lg-3" href="#createtrip">Create Trip</a></li>
+                        <li class="nav-item"><a class="nav-link me-lg-3" href="#alltrips">All Trips</a></li>
+                    </ul>
+                    <button class="btn btn-primary rounded-pill px-3 mb-2 mb-lg-0" id="readMoreBtn" >
+                        <span class="d-flex align-items-center">
+                            <i class="bi-book me-2"></i>
+                            <span class="small">Read More</span>
+                        </span>
+                    </button>
                 </div>
             </div>
-
-            <h5 class="my-4">Network</h5>
-
-            <div class="form-group mb-3 row"><label for="channel" class="col-md-5 col-form-label">Channel</label>
-                <div class="col-md-7">
-                    <input type="text" class="form-control form-control-lg" id="channel" value="q1channel" required>
+        </nav>
+        <!-- Mashead header-->
+        <header class="masthead">
+            <div class="container px-5">
+                <div class="row gx-5 align-items-center">
+                    <div class="col-lg-6">
+                        <!-- Mashead text and app badges-->
+                        <div class="mb-5 mb-lg-0 text-center text-lg-start">
+                            <h1 class="display-1 lh-1 mb-3">Blockchain Powered Car Sharing</h1>
+                            <p class="lead fw-normal text-muted mb-5">Discover Seamless Car Sharing Solutions Tailored to Your Lifestyle. Choose Between Free-Floating Freedom or Station-Based Convenience for Every Journey</p>
+                            
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <img src = "assets/img/carsharing-illustration.svg" class="img-fluid img-responsive h-100" alt="..." style="height: 20rem; max-height: 20rem;" ></img>
+                    </div>
                 </div>
             </div>
-
-
-            <div class="form-group mb-3 row">
-                <label for="identity" class="col-md-5 col-form-label">Chaincode</label>
-                <div class="col-md-7">
-                    <input type="text" class="form-control form-control-lg" id="chaincode" value="assetTransfer" required>
+        </header>
+        <!-- Quote/testimonial aside-->
+        <aside class="text-center bg-gradient-primary-to-secondary">
+            <div class="container px-5">
+                <div class="row gx-5 justify-content-center">
+                    <div class="col-xl-8">
+                        <div class="h2 fs-1 text-white mb-4">"Your security is our priority. With blockchain, every transaction and detail is tamper-proof, providing a secure foundation for your car-sharing experience."</div>
+                        <img src="assets/img/hyperledger-icon.svg" alt="..." style="height: 3rem" />
+                    </div>
                 </div>
             </div>
+        </aside>
+        <!-- Create Trip section-->
+        <section id="createtrip">
+            <div class="container px-5">
+                <div class="row gx-5 ">
+                    <h2 class="mb-4">
+                        Create new trip
+                    </h2>
+                        
+                    <div class="col-lg-30 order-lg-0">
+                        <form id="contactForm" data-sb-form-api-token="API_TOKEN">
+                            <!-- Trip ID input-->
+                            <div class="form-floating mb-3">
+                                <input class="form-control" id="id" type="text" placeholder="Enter tirp id..." data-sb-validations="required" />
+                                <label for="name">Trip ID</label>
+                                <div class="invalid-feedback" data-sb-feedback="id:required">An ID is required.</div>
+                            </div>
+                            <!-- User name input-->
+                            <div class="form-floating mb-3">
+                                <input class="form-control" id="username" type="text" placeholder="Enter tirp user name..." data-sb-validations="required" />
+                                <label for="name">User Name</label>
+                                <div class="invalid-feedback" data-sb-feedback="username:required">An user name is required.</div>
+                            </div>
+                            <!-- Leaving location input-->
+                            <div class="form-floating mb-3">
+                                <input class="form-control" id="leaving-location" type="text" placeholder="Enter leaving location user name..." data-sb-validations="required" />
+                                <label for="name">Leaving Location</label>
+                                <div class="invalid-feedback" data-sb-feedback="leaving-location:required">A leaving location is required.</div>
+                            </div>
+                            <!-- Arrival location input-->
+                            <div class="form-floating mb-3">
+                                <input class="form-control" id="arrival-location" type="text" placeholder="Enter arrival location user name..." data-sb-validations="required" />
+                                <label for="name">Arrival Location</label>
+                                <div class="invalid-feedback" data-sb-feedback="arrival-location:required">An arrival location is required.</div>
+                            </div>
+                            <!-- station input-->
+                            <div class="form-floating mb-3">
+                                <input class="form-control" id="station" type="text" placeholder="Enter arrival location user name..." />
+                                <label for="name">Intermediate Available Station</label>
+                            </div>
+                            <!-- Date time leaving input-->
+                            <div class="form-floating mb-3">
+                                <input class="form-control" type="datetime-local" id="datetime-leaving" name="dateStandard" data-sb-validations="required">
+                                <label for="timeStandard">Leaving Date-Time</label>
+                                <div class="invalid-feedback" data-sb-feedback="datetime-leaving:required">A leaving date is required.</div>
+                            </div>
+                            <!-- Date time arrival input-->
+                            <div class="form-floating mb-3">
+                                <input class="form-control" type="datetime-local" id="datetime-arrival" name="dateStandard" data-sb-validations="required">
+                                <label for="timeStandard">Arrival Date-Time</label>
+                                <div class="invalid-feedback" data-sb-feedback="datetime-arrival:required">An arrival date is required.</div>
+                            </div>
+                            <!-- Car input-->
+                            <div class="form-floating mb-3">
+                                <input class="form-control" id="car" type="text" placeholder="Enter car type..." data-sb-validations="required" />
+                                <label for="name">Vehicle Type</label>
+                                <div class="invalid-feedback" data-sb-feedback="car:required">A vehicle type is required.</div>
+                            </div>
+                            <!-- Seats input-->
+                            <div class="form-floating mb-3">
+                                <input class="form-control" id="seats" type="number" placeholder="Enter sets number..." data-sb-validations="required" value="0" min="0" max="10"/>
+                                <label for="name">Seats Available</label>
+                                <div class="invalid-feedback" data-sb-feedback="seats:required">A number of seats is required.</div>
+                            </div>
+                            <!-- Organization input-->
+                            <div class="form-floating mb-3">
+                                <input class="form-control" id="organization" type="text" placeholder="Enter organization name..." value="agency.quotation.com" data-sb-validations="required" />
+                                <label for="name">Organization</label>
+                                <div class="invalid-feedback" data-sb-feedback="organization:required">An organization is required.</div>
+                            </div>
+                            <!-- Channel input-->
+                            <div class="form-floating mb-3">
+                                <input class="form-control" id="channel" type="text" placeholder="Enter chennel name..." value="q1channel" data-sb-validations="required" />
+                                <label for="name">Channel</label>
+                                <div class="invalid-feedback" data-sb-feedback="channel:required">A channel is required.</div>
+                            </div>
+                             <!-- ChainCode input-->
+                            <div class="form-floating mb-3">
+                                <input class="form-control" id="chaincode" type="text" placeholder="Enter chain code..." value="shareService"  />
+                                <label for="name">Chain Code</label>
+                                <div class="invalid-feedback" data-sb-feedback="chain-code:required">A chain code is required.</div>
+                            </div>
+                            <!-- txName input-->
+                            <div class="form-floating mb-3">
+                                <input class="form-control" id="txName" type="text" placeholder="Enter transaction name..." value="createTrip" data-sb-validations="required" />
+                                <label for="name">Transaction Name</label>
+                                <div class="invalid-feedback" data-sb-feedback="txName:required">A transaction name is required.</div>
+                            </div>
 
-
-            <h5 class="my-4">Transaction</h5>
-
-            <hr class="bg-transparent border-0 py-1" />
-            <div class="form-group mb-3 row">
-                <label for="txName" class="col-md-5 col-form-label">Transaction Name</label>
-                <div class="col-md-7">
-                    <input type="text" class="form-control form-control-lg" id="txName" value="createAsset"
-                        required>
+                            
+                            <!-- Submit success message-->
+                            <!---->
+                            <!-- This is what your users will see when the form-->
+                            <!-- has successfully submitted-->
+                            <div class="d-none" id="submitSuccessMessage">
+                                <div class="text-center mb-3">
+                                    <div class="fw-bolder">Trip created successfully!</div>
+                                    To check it, go to <a href="#alltrips">All Trips</a> section
+                                </div>
+                            </div>
+                            <!-- Submit error message-->
+                            <!---->
+                            <!-- This is what your users will see when there is-->
+                            <!-- an error submitting the form-->
+                            <div class="d-none" id="submitErrorMessage"><div class="text-center text-danger mb-3">Error creating trip!</div></div>
+                            <!-- Submit Button-->
+                            <div class="d-grid">
+                                <button class="btn btn-primary rounded-pill btn-lg disabled" id="submitButton" type="submit">Create Trip</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
-            <div class="form-group mb-3 row"><label for="txParams" class="col-md-5 col-form-label">Transaction
-                    Parameters</label>
-                <div class="col-md-7">
-                    <input type="text" class="form-control form-control-lg" id="txParams" value="shoes,white,39,morena,70">
+        </section>
+         <!-- Basic features section-->
+        <section class="bg-light">
+            <div class="container px-5">
+                <div class="row gx-5 align-items-center justify-content-center justify-content-lg-between">
+                     <div class="col-sm-8 col-md-6">
+                        <div class="px-5 px-sm-0"><img class="img-fluid rounded-circle" src="assets/img/carsharing2-illustration.svg" alt="..." /></div>
+                    </div>
+                    <div class="col-12 col-lg-5">
+                        <h2 class="display-4 lh-1 mb-4">Enter a new age of car sharing</h2>
+                        <p class="lead fw-normal text-muted mb-5 mb-lg-0">Experience the future of trust and security with our car-sharing platform powered by Hyperledger. Our innovative system ensures the highest level of trustworthiness, leveraging Hyperledger's cutting-edge framework. Your data and transactions are protected, creating a new standard for secure and reliable car sharing. Embrace innovation and drive with confidence in a system designed to exceed your expectations.</p>
+                    </div>
+                
                 </div>
             </div>
-            <hr class="my-4" />
-            <div class="form-group mb-3 row"><label for="sendTxBtn" class="col-md-5 col-form-label"></label>
-                <div class="col-md-7"><button class="btn btn-primary btn-lg" id="sendTxBtn"
-                        type="button">Submit!</button></div>
+        </section>
+        <section id="alltrips">
+            <div class="container px-5" >
+                <div class="row gx-5" id="cardsContainer" >
+                    <h2 class="mb-4">
+                        All Trips
+                    </h2>
+                        
+                    <div class="row order-lg-0 gx-1"  >
+                        <!--
+                        <div class="card mx-3 my-3" style="width: 18rem;">
+                            <div class="card-body">
+                                <h5 class="card-title">Trip ID</h5>
+                                <p class="card-text">Leaving - Arrival location 
+                                    <br />
+                                    Leaving - Arrival date-time
+                                    <br />
+                                    User - Car Type
+                                </p>
+                                
+                                <a href="#" class="btn btn-danger" role="button">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+
+                                <a href="#" class="btn btn-primary">Book Trip</a>
+                                
+                            </div>
+                            <div class="card-footer bg-transparent">Seats available : 1</div>
+                        </div>
+                        
+                        <div class="card mx-3 my-3" style="width: 18rem;">
+                            <div class="card-body">
+                                <h5 class="card-title">Trip ID</h5>
+                                <p class="card-text">Leaving - Arrival location 
+                                    <br />
+                                    Leaving - Arrival date-time
+                                    <br />
+                                    User - Car Type
+                                </p>
+                                <a href="#" class="btn btn-danger" role="button">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                                <a href="#" class="btn btn-primary">Book Trip</a>
+                                
+                            </div>
+                            <div class="card-footer bg-transparent">Seats available : 1</div>
+                        </div>-->
+                        
+                    </div>
+                </div>
             </div>
-        </form>
-    </div>
+        </section>
+        
+        <!-- Footer-->
+        <footer class="bg-black text-center py-5">
+            <div class="container px-5">
+                <div class="text-white-50 small">
+                    <div class="mb-2">&copy; Università di Camerino 2024. All Rights Reserved.</div>
+                </div>
+            
+            </div>
+            
+        </footer>
 
-    <script>
-        document.getElementById("sendTxBtn").addEventListener("click", (e) => {
-            var organization = document.getElementById("organization").value
-            if (!organization) {
-                alert("'Organization' field missing!")
-                return
-            }
+         <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                var xhr = new XMLHttpRequest();
+                var url = "https://orange-train-jqvwgg969p9hq949-3000.app.github.dev/getAllTrip";
 
-            var channel = document.getElementById("channel").value
-            if (!channel) {
-                alert("'Channel' field missing!")
-                return
-            }
+                xhr.open("GET", url, true);
 
-            var chaincode = document.getElementById("chaincode").value
-            if (!chaincode) {
-                alert("'chaincode' field missing!")
-                return
-            }
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === XMLHttpRequest.DONE) {
+                        if (xhr.status === 200) {
+                            // Successfully received the response
+                            var responseData = JSON.parse(xhr.responseText);
+                            console.log("Success");
 
-            var txName = document.getElementById("txName").value
-            if (!txName) {
-                alert("'Transaction Name' field missing!")
-                return
-            }
+                            // Process responseData and create cards
+                            createTripCards(responseData);
+                        } else {
+                            // Handle errors
+                            console.error('Error:', xhr.status, xhr.statusText);
+                        }
+                    }
+                };
 
-            var txParams = document.getElementById("txParams").value
-            if (!txParams && (txName != "initLedger" || txName != "GetAllAssets")) {
-                alert("'Transaction Params' field missing!")
-                return
-            }
+                xhr.send();
 
-            var paramsArr = []
-            txParams = txParams.split(',')
-            txParams.forEach(p => {
-                paramsArr.push(p)
+                function createTripCards(tripsData) {
+                    var cardsContainer = document.getElementById("cardsContainer");
+
+                    tripsData.forEach(function (trip) {
+                        var formattedDeparture = formatDateTime(trip.ScheduleDeparture);
+                        var formattedArrival = formatDateTime(trip.ScheduleArrival);
+
+                        var card = document.createElement("div");
+                        card.className = "card mx-3 my-3";
+                        card.style.width = "18rem";
+                        card.id = "tripCard_" + trip.ID; // Unique ID based on trip ID
+
+                        var cardBody = document.createElement("div");
+                        cardBody.className = "card-body";
+
+                        var cardTitle = document.createElement("h5");
+                        cardTitle.className = "card-title";
+                        cardTitle.textContent = "Trip ID: " + trip.ID;
+
+                        var cardText = document.createElement("p");
+                        cardText.className = "card-text";
+                        cardText.textContent = "From: " + trip.Departure + " To: " + trip.Arrival +
+                            "\n-D.T: " + formattedDeparture + " -A.T: " + formattedArrival +
+                            "\n " + trip.User + " - " + trip.Vehicle ;
+
+                        var deleteBtn = document.createElement("a");
+                        deleteBtn.href = "#";
+                        deleteBtn.className = "btn btn-danger";
+                        deleteBtn.role = "button";
+                        deleteBtn.innerHTML = '<i class="bi bi-trash"></i>';
+
+                        var bookBtn = document.createElement("a");
+                        bookBtn.href = "#";
+                        bookBtn.className = "btn btn-primary mx-2";
+                        bookBtn.textContent = "Book Trip";
+
+                        cardBody.appendChild(cardTitle);
+                        cardBody.appendChild(cardText);
+                        cardBody.appendChild(deleteBtn);
+                        cardBody.appendChild(bookBtn);
+
+                        card.appendChild(cardBody);
+
+                        var cardFooter = document.createElement("div");
+                        cardFooter.className = "card-footer bg-transparent";
+                        cardFooter.textContent = "Seats available: " + trip.Seats;
+
+                        card.appendChild(cardFooter);
+
+                        cardsContainer.appendChild(card);
+                    });
+                }
+                // Function to format date-time
+                function formatDateTime(dateTimeString) {
+                    var dateTime = new Date(dateTimeString);
+                    
+                        var options = {
+                            year: "numeric",
+                            month: "numeric",
+                            day: "numeric",
+                            hour: "numeric",
+                            minute: "numeric",
+                            hour12: true
+                        };
+
+                    return dateTime.toLocaleString("en-US", options);
+                }
+            });
+
+        </script>   
+        
+        <!-- Bootstrap core JS-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+        <script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
+
+        <script>
+            document.getElementById("submitButton").addEventListener("click", (e) => {
+
+                var id = document.getElementById("id").value
+                if (!id) {
+                    alert("'id' field missing!")
+                    return
+                }
+                var username = document.getElementById("username").value
+                if (!username) {
+                    alert("'username' field missing!")
+                    return
+                }
+
+                var leaving_location = document.getElementById("leaving-location").value
+                if (!leaving_location) {
+                    alert("'leaving-location' field missing!")
+                    return
+                }
+
+                var arrival_location = document.getElementById("arrival-location").value
+                if (!arrival_location) {
+                    alert("'arrival-location' field missing!")
+                    return
+                }
+
+                var datetime_leaving = document.getElementById("datetime-leaving").value
+                if (!datetime_leaving) {
+                    alert("'datetime-leaving' field missing!")
+                    return
+                }
+
+                var datetime_arrival = document.getElementById("datetime-arrival").value
+                if (!datetime_arrival) {
+                    alert("'datetime-arrival' field missing!")
+                    return
+                }
+
+                var car = document.getElementById("car").value
+                if (!car) {
+                    alert("'car' field missing!")
+                    return
+                }
+
+                var seats = document.getElementById("seats").value
+                if (!seats) {
+                    alert("'seats' field missing!")
+                    return
+                }
+
+                var car = document.getElementById("car").value
+                if (!car) {
+                    alert("'car' field missing!")
+                    return
+                }
+                var station = document.getElementById("station").value
+                if (!station) {
+                    alert("'station' field missing!")
+                    return
+                }
+                
+                var organization = document.getElementById("organization").value
+                if (!organization) {
+                    alert("'Organization' field missing!")
+                    return
+                }
+
+                var channel = document.getElementById("channel").value
+                if (!channel) {
+                    alert("'Channel' field missing!")
+                    return
+                }
+
+                var chaincode = document.getElementById("chaincode").value
+                if (!chaincode) {
+                    alert("'chaincode' field missing!")
+                    return
+                }
+
+                var txName = document.getElementById("txName").value
+                if (!txName) {
+                    alert("'Transaction Name' field missing!")
+                    return
+                }
+            
+                var paramsArr = [id, username, leaving_location, station, arrival_location, datetime_leaving, datetime_arrival, car, seats];
+
+                var xhr = new XMLHttpRequest()
+
+                xhr.open("POST", "https://orange-train-jqvwgg969p9hq949-3000.app.github.dev/submitTX", true)
+
+                var data = {
+                    organization: organization,
+                    channel: channel,
+                    chaincode: chaincode,
+                    txName: txName,
+                    txParams: paramsArr,
+                };
+                console.log(data)
+                xhr.setRequestHeader('Content-Type', 'application/json');
+
+                xhr.onload = function() {
+                    if (xhr.status === 200) {
+                        console.log('Request successful');
+                        console.log(JSON.parse(xhr.responseText));
+                    } else {
+                        console.error('Request failed', xhr.status, xhr.statusText);
+                    }
+                };
+                xhr.send(JSON.stringify(data));
+                
+                
+
             })
+        </script>
 
-            var xhr = new XMLHttpRequest()
-            // TODO change the url to your own domain
-            xhr.open("POST", "https://jubilant-space-happiness-rv5q5794v6wcxqp7-3000.app.github.dev/submitTX", true)
-
-            xhr.setRequestHeader('Content-Type', 'application/json')
-            xhr.send(JSON.stringify({
-                organization,
-                channel,
-                chaincode,
-                txName,
-                txParams: paramsArr
-            }))
-        })
-    </script>
-
-</body>
+        <script>
+            document.getElementById("readMoreBtn").addEventListener("click", function() {
+                window.location.href = 'https://hyperledger-fabric.readthedocs.io/en/release-2.5/';
+            });
+        </script>
+    </body>
 
 </html>

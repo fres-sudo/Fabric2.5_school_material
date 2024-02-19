@@ -9,9 +9,10 @@
     "author": "Alessandro Marcelletti",
     "license": "ISC",
     "dependencies": {
-        "app-root-path": "3.1.0",
         "@grpc/grpc-js": "^1.9.13",
         "@hyperledger/fabric-gateway": "^1.4.0",
+        "app-root-path": "3.1.0",
+        "bootstrap-icons": "^1.11.3",
         "crypto": "^1.0.1",
         "express": "^4.17.1",
         "fabric-ca-client": "^2.2.0",

@@ -15,6 +15,7 @@ app.post('/submitTX', async (req, res) => {
     const txName = data.txName
     const txParams = data.txParams
 
+    console.log(txParams)
     const resultTx = await FabNetwork.submitT(organization, channel, chaincode, txName, txParams)
     res.send(resultTx)
 })
