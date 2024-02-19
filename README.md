@@ -1,6 +1,33 @@
 [//]: # (SPDX-License-Identifier: CC-BY-4.0)
 
-# Basic commands to interact with the network
+# Car Sharing 🚗
+
+This project aims to develop a decentralized car sharing system utilizing blockchain technology. By leveraging Hyperledger Fabric, the system ensures secure, transparent, and efficient transactions between car owners and users.
+
+## Key Features: 🔑
+
+- Decentralized Ownership: Utilizes blockchain to record ownership, allowing for transparent and immutable tracking of vehicle ownership and usage history.
+- Smart Contracts: Implements smart contracts to automate and enforce agreements between car owners and users, facilitating seamless transactions.
+- Immutable Record Keeping: Ensures that all transactions and interactions within the system are securely recorded on the blockchain, preventing tampering or fraud.
+- Transparent Governance: Provides visibility into the governance of the car sharing system, allowing stakeholders to participate in decision-making processes.
+
+### Core concept 📍
+
+![Screenshot 2024-02-19 alle 20 08 42](https://github.com/fres-sudo/Fabric2.5_school_material/assets/65305708/364b83a2-bdeb-4220-b83d-475d5f1abe8e)=
+
+
+### Basic Preview
+
+The following screenshots demo a basic function of the potential SaaS, if you want to simulate the project on your local machine you can follow along with the documentation
+
+![photo1706224521](https://github.com/fres-sudo/Fabric2.5_school_material/assets/65305708/2348390a-658d-4f61-831b-d4b33f015772)
+![photo1706224521-2](https://github.com/fres-sudo/Fabric2.5_school_material/assets/65305708/35653db2-253f-46e9-b8db-bce079ee4581)
+![photo1706224521-3](https://github.com/fres-sudo/Fabric2.5_school_material/assets/65305708/b92797dc-f585-45ad-a5a7-e22e0021f8ad)
+![photo1706224521-4](https://github.com/fres-sudo/Fabric2.5_school_material/assets/65305708/c9747766-f665-44f1-b981-2f5facb01849)
+
+
+
+# Basic commands to interact with the network 💻
 
 - Move inside to the *test-network* folder:
 ```
